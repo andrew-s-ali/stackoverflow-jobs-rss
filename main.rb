@@ -45,16 +45,16 @@ File.open OUTFILE, "w" do |file|
 	techs_yesterday = {}
 	file << "\n# Difference from yesterday\n"
 
-	File.open OUTFILE_YESTERDAY, "r" do |file_yesterday|
-		file_yesterday.readlines.each do |line|
-			break if line[0].eql? "\n"
-			tech = line[0, line.index(":")]
-			count = line[line.index(" ")+1, line.length].to_i
-			techs_yesterday[tech] = count
+	if File.exist? OUTFILE_YESTERDAY
+		File.open OUTFILE_YESTERDAY, "r" do |file_yesterday|
+			file_yesterday.readlines.each do |line|
+				break if line[0].eql? "\n"
+				tech = line[0, line.index(":")]
+				count = line[line.index(" ")+1, line.length].to_i
+				techs_yesterday[tech] = count
+			end
 		end
 	end
-
-	pp interested_techs
 	
 	techs_yesterday.each do |k, v|
 		if interested_techs[k]
