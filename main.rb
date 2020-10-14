@@ -50,9 +50,8 @@ File.open OUTFILE, "w" do |file|
 
 		File.open OUTFILE_YESTERDAY, "r" do |file_yesterday|
 			file_yesterday.readlines.each do |line|
-				puts line.length
 				if line.eql? "\n"
-					continue
+					next
 				elsif line[0].eql? "#"
 					break
 				end
