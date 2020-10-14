@@ -2,7 +2,7 @@ require "rss"
 require "open-uri"
 require "yaml"
 
-config = YAML.load_file('config.yml')
+config = YAML.load_file("#{File.dirname(__FILE__)}/config.yml")
 
 OUTFILE="#{File.dirname(__FILE__)}/jobs-category-count-#{Time.now.strftime("%Y%m%d")}.txt"
 if File.exist? OUTFILE
