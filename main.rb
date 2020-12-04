@@ -13,12 +13,17 @@ OUTFILE_YESTERDAY="#{File.dirname(__FILE__)}/jobs-category-count-#{(Time.now-60*
 
 techs = {}
 interested_techs = {}
+total_count = 0
+senior_count = 0
 
 url = "http://stackoverflow.com/jobs/feed"
 URI.open(url) do |rss|
 	feed = RSS::Parser.parse(rss)
 	#puts "Title: #{feed.channel.title}"
+	total_count = feed.items.count
 	feed.items.each do |item|
+		senior_count += 1 if item.title.downcase["senior"]
+
 		item.categories.each do |category|
 			if techs[category.content]
 				techs[category.content] += 1
@@ -37,10 +42,7 @@ File.open OUTFILE, "w" do |file|
 	techs.each do |k, v|
 		if config["interested_in"].include? k
 			interested_techs[k] = v.to_i
-			file << k
-			file << ": "
-			file << interested_techs[k]
-			file << "\n"
+			file << "#{k}: #{interested_techs[k]}\n"
 		end
 	end
 
@@ -63,21 +65,21 @@ File.open OUTFILE, "w" do |file|
 
 		techs_yesterday.each do |k, v|
 			if interested_techs[k]
-				file << k
-				file << ": "
+				file << "#{k}: "
 				count_diff = techs[k] - v
 				count_diff = count_diff > 0 ? "+#{count_diff}" : count_diff 
-				file << count_diff
-				file << "\n"
+				file << "#{count_diff}\n"
 			end
 		end
 	end
+
+	file << "\nSenior count: #{senior_count} out of #{total_count} possible.\n"
 end
 
 # mail it to given address
 
-email = ARGV[0]
+#email = ARGV[0]
 
 # raspberry pi users should use msmtp
 
-system("msmtp #{email} < #{OUTFILE}")
+#system("msmtp #{email} < #{OUTFILE}")
