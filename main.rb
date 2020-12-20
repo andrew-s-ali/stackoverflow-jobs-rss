@@ -82,4 +82,4 @@ email = ARGV[0]
 
 # raspberry pi users should use msmtp
 
-#system("msmtp #{email} < #{OUTFILE}")
+system("msmtp #{email} < #{OUTFILE}")
