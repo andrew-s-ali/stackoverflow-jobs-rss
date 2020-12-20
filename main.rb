@@ -16,13 +16,13 @@ interested_techs = {}
 total_count = 0
 senior_count = 0
 
-url = "http://stackoverflow.com/jobs/feed"
+url = config["url"]
 URI.open(url) do |rss|
 	feed = RSS::Parser.parse(rss)
 	#puts "Title: #{feed.channel.title}"
 	total_count = feed.items.count
 	feed.items.each do |item|
-		senior_count += 1 if item.title.downcase["senior"]
+		senior_count += 1 if item.title =~ /.*\s?sr\.?\s|.*senior/i
 
 		item.categories.each do |category|
 			if techs[category.content]
@@ -82,4 +82,4 @@ email = ARGV[0]
 
 # raspberry pi users should use msmtp
 
-system("msmtp #{email} < #{OUTFILE}")
+#system("msmtp #{email} < #{OUTFILE}")
